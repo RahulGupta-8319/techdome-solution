@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { UilSignOutAlt } from '@iconscout/react-unicons'
 import axios from 'axios';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Welcome = ({ loginUser, setLoginUser }) => {
 
-    // //console.log('welcomepage', loginUser);
+    console.log('welcomepage', loginUser);
 
     const [loanAmount, setLoanAmount] = useState(0)
     const [term, setTerm] = useState(0)
@@ -25,25 +28,34 @@ const Welcome = ({ loginUser, setLoginUser }) => {
 
 
         try {
-            let res = await axios.post('http://localhost:5000/createloan', loanObj)
+            let res = await axios.post('https://techdome-solution.vercel.app/createloan', loanObj)
 
             if (res.data) {
                 // console.log("res.data", res.data);
                 setUserLoanObj(res.data.data)
 
                 let msg = res.data.message
-                alert(msg)
+                toast.success(msg)
+                // alert(msg)
             }
 
         } catch (error) {
             // console.log("error.response.data", error.response.data);
             let msg = error.response.data.message
-            alert(msg)
+            toast.error(msg)
+            // alert(msg)
             //console.log('Signup Failed', error.response.data);
         }
 
 
     }
+
+    useEffect(() => {
+        let name = loginUser.firstName +" "+ loginUser.lastName
+        toast.success(`welcome ${name}`);
+    }, []);
+
+    
 
     const handleLoanPayment = async (e) => {
         e.preventDefault()
@@ -51,20 +63,24 @@ const Welcome = ({ loginUser, setLoginUser }) => {
         try {
 
             //console.log("handeloanpayment");
-            let res = await axios.put('http://localhost:5000/loanpayment', userLoanObj)
+            let res = await axios.put('https://techdome-solution.vercel.app/loanpayment', userLoanObj)
 
             if (res.data) {
                 //console.log("res.data", res.data.data);
                 setUserLoanObj(res.data.data)
 
+                
+
                 let msg = res.data.message
-                alert(msg)
+                toast.success(msg)
+                // alert(msg)
             }
 
         } catch (error) {
             // console.log("error.response.data", error.response.data);
             let msg = error.response.data.message
-            alert(msg)
+            toast.error(msg)
+            // alert(msg)
             console.log('Loan Payment Failed', error.response.data);
         }
 
@@ -77,6 +93,9 @@ const Welcome = ({ loginUser, setLoginUser }) => {
 
         <div class="wel-wrapper">
             <div class="wel-container p-14 ">
+
+                {/* --------- toast container -----  */}
+                <ToastContainer />
 
                 {/* ----- welcome Heading -----  */}
 
@@ -161,9 +180,9 @@ const Welcome = ({ loginUser, setLoginUser }) => {
                     <div class="payment flex flex-col  shadow-md shadow-gray-300 rounded-md p-14 m-28 space-y-4 " >
 
                         <div className='loan-amount flex justify-between text-gray-700 min-w-[100px]'>
-                            <h1 className='min-w-[120px]'>Loan Amount</h1>
-                            <h1>{userLoanObj?.status}</h1>
-                            <h1 class=" text-gray-400 pr-[13%]">${userLoanObj?.loanAmount}</h1>
+                            <h1 className='font-semibold text-xl min-w-[120px]'>Loan Amount</h1>
+                            <h1 className='font-semibold text-xl '>{userLoanObj?.status}</h1>
+                            <h1 class="font-semibold text-xl text-gray-400 pr-[13%]">${userLoanObj?.loanAmount}</h1>
                         </div>
                         <hr />
 
@@ -175,11 +194,11 @@ const Welcome = ({ loginUser, setLoginUser }) => {
                         <hr /> */}
 
                         {
-                            userLoanObj?.repayments?.map((obj) => (
-                                <div>
+                            userLoanObj?.repayments?.map((obj, i) => (
+                                <div key={i}>
                                     <div className='flex justify-between text-gray-700 min-w-[100px] pb-4'>
                                         <h1 className='min-w-[120px]'>{obj.date}</h1>
-                                        <h1>{obj.status}</h1>
+                                        <h1 className=''>{obj.status}</h1>
                                         <h1 class=" text-gray-600 pr-[13%]">{obj.amount}</h1>
                                     </div>
                                     <hr />

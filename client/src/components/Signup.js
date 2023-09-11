@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { Link, redirect, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { UilUser, UilEnvelope, UilLockAlt } from '@iconscout/react-unicons'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
+// import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -32,12 +34,14 @@ const Signup = () => {
 
         try {
 
-            let res = await axios.post('http://localhost:5000/signup', formData)
+            let res = await axios.post('https://techdome-solution.vercel.app/signup', formData)
 
             //console.log(res.data);
 
             if (res.data) {
                 let msg = res.data.message
+                // toast(msg)
+                
                 alert(msg)
                 navigate('/login')
 
@@ -46,7 +50,7 @@ const Signup = () => {
         } catch (error) {
 
             let msg = error.response.data.message
-            alert(msg)
+            toast.error(msg)
             //console.log('Signup Failed', error.response.data);
         }
     }
@@ -56,6 +60,10 @@ const Signup = () => {
     return (
         <div className="signup-wrapper bg-gray-100 w-auto h-screen flex justify-center items-center">
             <div className="signup-container w-[60%] max-w-[500px]  bg-white shadow-2xl shadow-gray-300 rounded-lg ">
+                {/* ========= alert toast ===== */}
+
+                <ToastContainer />
+                
                 {/* ===== heading ==== */}
                 <div className='heading flex flex-col justify-center items-center p-4'>
                     <h1 className='text-2xl font-semibold '>

@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { UilUser, UilLockAlt } from '@iconscout/react-unicons'
 import axios from 'axios'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const Login = ({ setLoginUser }) => {
@@ -29,21 +32,25 @@ const Login = ({ setLoginUser }) => {
         e.preventDefault()
 
         try {
-            let res = await axios.post('http://localhost:5000/login', formData)
+            let res = await axios.post('https://techdome-solution.vercel.app/login', formData)
 
             if (res.data) {
                 //console.log("res.data.data", res.data.data);
                 setLoginUser(res.data.data)
+                
 
-                let msg = res.data.message
-                alert(msg)
+                let msg = res.data.message;
+
+                toast.success("successfully login");
+                
+                // alert(msg)
                 navigate('/')
             }
-
+            
         } catch (error) {
             //console.log("error.response.data", error.response.data);
             let msg = error.response.data.message
-            alert(msg)
+            toast.error(msg);
             //console.log('Signup Failed', error.response.data);
         }
     }
@@ -52,6 +59,8 @@ const Login = ({ setLoginUser }) => {
 
     return (
         <div className="login-wrapper bg-gray-100 w-auto h-screen flex justify-center items-center">
+
+            <ToastContainer />
             <div className="login-container w-[60%] max-w-[500px] bg-white shadow-2xl shadow-gray-300 rounded-lg ">
                 {/* ===== heading ==== */}
                 <div className='heading flex flex-col justify-center items-center p-4'>
@@ -93,12 +102,10 @@ const Login = ({ setLoginUser }) => {
                             <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded w-full font-semibold text-2xl' onClick={handleSubmit}>
                                 Log In
                             </button>
-
                             <Link to='/signup'>
                                 <p className='text-gray-400 text-sm p-3 cursor-pointer hover:underline'>Create an account ? <span className='text-black'> Sign Up </span></p>
                             </Link>
                         </div>
-
 
                     </form>
                 </div>
